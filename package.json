@@ -1,0 +1,17 @@
+{
+  "name": "bdx-studio-discord-bot",
+  "version": "1.0.0",
+  "description": "Bot oficial de moderación y comunidad para BDX Studio",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy-commands": "node src/deploy-commands.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.4.7"
+  }
+}
