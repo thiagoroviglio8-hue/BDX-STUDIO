@@ -2,8 +2,9 @@ require('dotenv').config();
 const {
   Client, GatewayIntentBits, Partials, Events, EmbedBuilder, ActionRowBuilder,
   ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, ModalBuilder,
-  TextInputBuilder, TextInputStyle
+  TextInputBuilder, TextInputStyle, REST, Routes
 } = require('discord.js');
+const { commands } = require('./commands');
 
 const required = ['DISCORD_TOKEN', 'CLIENT_ID'];
 for (const key of required) {
@@ -229,4 +230,18 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on(Events.Error, error => console.error('Error del cliente Discord:', error));
 process.on('unhandledRejection', error => console.error('Promesa rechazada:', error));
 
-client.login(process.env.DISCORD_TOKEN);
+async function startBot() {
+  try {
+    console.log('Registrando comandos slash globales automáticamente...');
+    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
+    console.log(`✅ ${commands.length} comandos slash registrados/actualizados.`);
+
+    await client.login(process.env.DISCORD_TOKEN);
+  } catch (error) {
+    console.error('No se pudo iniciar el bot o registrar los comandos:', error);
+    process.exit(1);
+  }
+}
+
+startBot();
